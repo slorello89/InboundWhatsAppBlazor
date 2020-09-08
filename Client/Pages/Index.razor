@@ -1,0 +1,39 @@
+﻿@page "/"
+@using WhatsAppBlazorInboundEntity.Shared
+@inject HttpClient HttpClient
+<div class="x-display-table">
+    <h2>Inbound Messages</h2>
+
+    <table class="table" id="dlrList">
+        <thead>
+            <tr>
+                <th>Message Id</th>
+                <th>From</th>
+                <th>To</th>                
+                <th>Text</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var message in _messages)
+            {
+            <tr>
+                <td>@message.MessageId</td>
+                <td>@message.From</td>
+                <td>@message.To</td>
+                <td>@message.Text</td>
+            </tr>
+            }
+        </tbody>
+
+    </table>
+</div>
+
+@code{
+    private List<WhatsAppMessage> _messages = new List<WhatsAppMessage>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _messages = await HttpClient.GetFromJsonAsync<List<WhatsAppMessage>>
+            ("/api/WhatsApp/getMessages");
+    }
+}
